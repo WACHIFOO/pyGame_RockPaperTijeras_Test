@@ -1,4 +1,4 @@
-# from classes.background import Background
+from classes.background import Background
 import pygame
 
 
@@ -8,7 +8,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.playing = True
         self.screen = pygame.display.set_mode((500, 500))
-        # self.__background = Background()
+        self.__background = Background()
 
     def flip(self):
         """
@@ -27,7 +27,7 @@ class Game:
         Al empezar el bucle limpiamos la pantalla y demás
         """
         self.screen.fill(0)
-        # self.__background.blit(self.screen)
+        self.__background.blit(self.screen)
 
     def end_hearthbeat(self):
         """

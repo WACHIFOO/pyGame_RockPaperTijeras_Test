@@ -4,18 +4,14 @@ import pygame
 class Player:
     def __init__(self):
         self.force = 5
-        self.orientation = 0
+        self.elapsed = 0
+        self.frame_delay = 8
 
         # Carga de sprites
-        self.spriteNameOrientation = [
-            "front/Player-Sprite-000",
-            # "sided/left/Player-Sprite-Sideway-000",
-            # "sided/right/Player-Sprite-Sideway-000",
-        ]
-        self.player_sprites = [[] for i in range(3)]
+        self.player_sprites = []
         self.load_sprite_sheet()
         self.current_sprite = 0
-        self.player_image = self.player_sprites[self.orientation][self.current_sprite]
+        self.player_image = self.player_sprites[self.current_sprite]
         self.player = pygame.transform.scale(self.player_image, (80, 80))
 
         # Difinir posiciones
@@ -25,12 +21,18 @@ class Player:
         self.max_derecha = pygame.display.get_window_size()[0] - self.player.get_size()[0]
 
     def draw(self, screen):
-        self.current_sprite += 1
-        if self.current_sprite >= len(self.player_sprites[self.orientation]):
-            self.current_sprite = 0
-        self.player_image = self.player_sprites[self.orientation][self.current_sprite]
-        self.player = pygame.transform.scale(self.player_image, (80, 80))
+        # Controlamos los fps de la animacion
+        self.elapsed += 1
+        if self.elapsed >= self.frame_delay:
+            self.elapsed = 0
+            # Cargamos el siguiente sprite
+            self.current_sprite += 1
+            if self.current_sprite >= len(self.player_sprites):
+                self.current_sprite = 0
+            self.player_image = self.player_sprites[self.current_sprite]
+            self.player = pygame.transform.scale(self.player_image, (80, 80))
 
+        # Mostramos por pantalla
         screen.blit(self.player, self.player_rect)
 
     def __check_limits(self):
@@ -48,25 +50,21 @@ class Player:
         :param key_pressed: pygame.key.get_pressed()
         """
         if key_pressed[pygame.K_LEFT]:
-            self.orientation = 1
             self.player_rect.x -= self.force
         elif key_pressed[pygame.K_RIGHT]:
-            self.orientation = 2
             self.player_rect.x += self.force
-        else:
-            self.orientation = 0
+        elif key_pressed[pygame.K_UP]:
+            pass
         self.__check_limits()
 
     def load_sprite_sheet(self):
-        for j in range(3):
-            for i in range(4):
-                # Cargamos los sprites de frente y de lado
-                self.player_sprites[j].append(
-                    pygame.image.load(
-                        "sprites/Player/"
-                        + self.spriteNameOrientation[j]
-                        + str(i + 1)
-                        + ".png"
-                    )
+        for i in range(4):
+            # Cargamos los sprites de idle
+            self.player_sprites.append(
+                pygame.image.load(
+                    "sprites/idle/"
+                    + "idlePlayer"
+                    + str(i + 1)
+                    + ".png"
                 )
-
+            )
