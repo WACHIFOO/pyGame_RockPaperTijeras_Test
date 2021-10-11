@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
         if not game.pause:
             # Renderizamos el jugador
-            player.draw(game.screen)
+            player.update(game.screen)
 
         # Finalizamos el latido
         if not game.pause:
